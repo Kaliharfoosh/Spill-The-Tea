@@ -3,7 +3,7 @@
 Each task lives in its own files, so the three of us can work in parallel without merge conflicts.
 
 **How to work**
-1. `git checkout main && git pull`, then create your branch: `git checkout -b <your-branch>`.
+1. `git checkout main && git pull`, then create your branch named after you: `git checkout -b mayan` / `moaaz` / `habiba`.
 2. Only edit the files listed in your task (plus one line at the bottom of `BUILD_LOG.md`).
 3. Push your branch and open a **Pull Request** into `main`. Habiba reviews and merges, and Vercel
    posts a preview link on the PR.
@@ -12,7 +12,7 @@ Each task lives in its own files, so the three of us can work in parallel withou
 
 ---
 
-## Task A: Mayan, crypto module (`feature/crypto`)
+## Task A: Mayan, crypto module (branch: `mayan`)
 
 Build the encryption and hashing helpers that the rest of the app will use. **Don't wire them into
 routes yet**, Habiba does that when the login/posting flow is ready.
@@ -56,7 +56,7 @@ the user id. (Hint: there are only a few thousand student ids. How long would it
 
 ---
 
-## Task B: Moaaz, k-anonymity + threat model (`feature/anonymisation`)
+## Task B: Moaaz, k-anonymity + threat model (branch: `moaaz`)
 
 **Files**
 - `analytics/requirements.txt` (`pandas`)
@@ -91,7 +91,7 @@ section 4 of the proposal as your starting list.
 
 ---
 
-## Task C: Habiba (with Claude), login, roles and posting (`feature/auth-rbac`)
+## Task C: Habiba (with Claude), login, roles and posting (branch: `habiba`)
 
 - `server/permissions.js`: the six-role permission matrix, plus `requirePerm()` middleware
 - Sign up / log in with bcrypt, session cookie
