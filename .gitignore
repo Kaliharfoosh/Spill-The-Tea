@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.pglite/
+.vercel/
+.env
+.env.*
+!.env.example
+*.log
+.idea/workspace.xml
+.idea/shelf/
+.DS_Store
