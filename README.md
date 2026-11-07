@@ -5,6 +5,8 @@ for the BUE Data Privacy module (26CSCN26H).
 
 **Core privacy property:** posts are public, but who wrote them is secret, even from admins.
 
+**Live:** https://spill-the-tea-jet.vercel.app
+
 ## Run it locally
 
 Requires Node.js 20 or newer.
