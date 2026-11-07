@@ -17,6 +17,21 @@ async function connect() {
       ssl: { rejectUnauthorized: true }, // TLS in transit: app server -> database
       max: 3,
     });
+    // Create tables + demo data on first start. The advisory lock stops two
+    // serverless instances starting at once from seeding twice.
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(7331)');
+      await client.query(SCHEMA);
+      await seed(client);
+      await client.query('COMMIT');
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
     return { kind: 'neon', query: (sql, params) => pool.query(sql, params) };
   }
 

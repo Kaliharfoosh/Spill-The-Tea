@@ -12,8 +12,7 @@
     "dev:api": "node --watch --env-file-if-exists=.env server/dev.js",
     "dev:web": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "db:setup": "node --env-file-if-exists=.env server/setup.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "express": "^5.1.0",
