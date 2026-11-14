@@ -9,8 +9,9 @@ Each task lives in its own files, so the three of us can work in parallel withou
    - Vercel is on the free Hobby plan, so it only deploys commits authored by Habiba. Previews of the
      `mayan` and `moaaz` branches show as **Blocked**. That is expected, not an error in your code.
      Test your work locally with `npm run dev` instead.
-   - Habiba merges with **"Create a merge commit"** or **"Squash and merge"**, never "Rebase and merge".
-     That way the commit on `main` is hers and production deploys.
+   - Habiba merges with **"Create a merge commit"** only. "Squash and merge" and "Rebase and merge"
+     keep your name as the commit author, so Vercel would block the production deploy.
+   - Never push to `main` yourself and never click Merge yourself, for the same reason.
 4. Using Claude in WebStorm? Tell it: *"Do Task A from docs/TASKS.md"*. It already reads
    `CLAUDE.md` for the project rules.
 

@@ -374,7 +374,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
               <li>Open a PR into <code>main</code>. Nobody merges their own PR: Habiba reviews Mayan and Moaaz; Mayan or Moaaz reviews Habiba.</li>
               <li>Review within 24 hours. Habiba's work is the critical path, so slow reviews delay everyone.</li>
               <li>Every PR description has three lines: what, security reason, how to test.</li>
-              <li><code>npm test</code> and <code>scripts/attack.sh</code> pass locally before merging. Vercel's free plan blocks previews of Mayan's and Moaaz's commits, so Habiba merges with “Create a merge commit” or “Squash and merge” (never “Rebase and merge”) and checks the production deploy.</li>
+              <li><code>npm test</code> and <code>scripts/attack.sh</code> pass locally before merging. Vercel's free plan blocks previews of Mayan's and Moaaz's commits, so Habiba merges with “Create a merge commit” only (squash and rebase keep the teammate as author, which Vercel blocks) and checks the production deploy.</li>
               <li>One line in <code>BUILD_LOG.md</code> per merged work package. Write “(with Claude)” when AI helped.</li>
             </ol>
           </div>
