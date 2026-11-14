@@ -21,13 +21,13 @@ Build the encryption and hashing helpers that the rest of the app will use. **Do
 routes yet**, Habiba does that when the login/posting flow is ready.
 
 **Files**
-- `server/crypto.js`
-- `server/crypto.test.js`
+- `backend/crypto.js`
+- `backend/crypto.test.js`
 - `scripts/gen-keys.js`
 - `docs/crypto.md`
 - `.env.example` (add two lines)
 
-**`server/crypto.js` exports**
+**`backend/crypto.js` exports**
 | Function | Does |
 |---|---|
 | `encrypt(plaintext)` → `string` | AES-256-GCM with a fresh random 12-byte IV every call. Returns one string, `v1:<iv>:<authTag>:<ciphertext>` (base64 parts), so it fits in one `TEXT` column. |
@@ -44,7 +44,7 @@ routes yet**, Habiba does that when the login/posting flow is ready.
 
 **`.env.example`**: add empty `DATA_KEY=` and `PEPPER=` lines with a comment.
 
-**Tests** (`server/crypto.test.js`, run with `npm test`, uses built-in `node:test`):
+**Tests** (`backend/crypto.test.js`, run with `npm test`, uses built-in `node:test`):
 - encrypt → decrypt returns the original text (including emoji and Arabic text)
 - encrypting the same text twice gives **different** output (random IV)
 - changing one character of the payload makes `decrypt` throw
@@ -96,7 +96,7 @@ section 4 of the proposal as your starting list.
 
 ## Task C: Habiba (with Claude), login, roles and posting (branch: `habiba`)
 
-- `server/permissions.js`: the six-role permission matrix, plus `requirePerm()` middleware
+- `backend/permissions.js`: the six-role permission matrix, plus `requirePerm()` middleware
 - Sign up / log in with bcrypt, session cookie
 - Posting (goes to `brewing`), Moderator approve/hide, reactions, reports
 - Then: TOTP MFA, and wiring in Mayan's `crypto.js`

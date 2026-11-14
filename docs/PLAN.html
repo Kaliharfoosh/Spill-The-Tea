@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: sticky contents rail on the left, one reading column on the right; stacks to one column on phones.
-   Colours reuse the app's own tea palette (src/styles.css); each teammate gets one extra hue. */
+   Colours reuse the app's own tea palette (frontend/src/styles.css); each teammate gets one extra hue. */
 :root {
   --bg: #f7efe4;
   --surface: #fffaf3;
@@ -371,7 +371,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
             <h3>B · How we work in git</h3>
             <ol class="rules">
               <li>Pull <code>main</code>, then work on your own branch: <code>habiba</code>, <code>mayan</code>, <code>moaaz</code>.</li>
-              <li>Only edit the files listed in your work package. Shared files (<code>server/schema.js</code>, <code>server/app.js</code>) need a heads-up in the group chat first.</li>
+              <li>Only edit the files listed in your work package. Shared files (<code>backend/db/schema.js</code>, <code>backend/app.js</code>) need a heads-up in the group chat first.</li>
               <li>Open a PR into <code>main</code>. Anyone may merge their own PR, whenever they like, once one teammate has approved it. Never push straight to <code>main</code>.</li>
               <li>Review within 24 hours. Habiba's work is the critical path, so slow reviews delay everyone.</li>
               <li>Every PR description has three lines: what, security reason, how to test.</li>
@@ -504,7 +504,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Unit test: every role × capability matches the <a href="#matrix">matrix</a>; no role has <code>author:unmask</code>.</li>
                 <li>The matrix doc explains why each role differs from Sipper by one capability group.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/permissions.js</code>, <code>server/permissions.test.js</code>, <code>docs/permissions.md</code></dd><dt>Needs</dt><dd>Team agreement on the <a href="#decisions">open decisions</a> about roles.</dd><dt>Done when</dt><dd>Test passes and Mayan and Moaaz have signed off the table. It drives the attack suite and the admin console.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/permissions.js</code>, <code>backend/permissions.test.js</code>, <code>docs/permissions.md</code></dd><dt>Needs</dt><dd>Team agreement on the <a href="#decisions">open decisions</a> about roles.</dd><dt>Done when</dt><dd>Test passes and Mayan and Moaaz have signed off the table. It drives the attack suite and the admin console.</dd></dl>
             </div>
 
             <div class="wp" data-owner="habiba">
@@ -515,7 +515,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>New tables: <code>sessions</code>, <code>reports</code> (unique <code>reporter_tag</code> per cup), <code>reaction_marks</code> (unique reaction tag), <code>audit_log</code>, <code>campus_stats</code>.</li>
                 <li>Neon only holds demo data, so we reset tables with a documented command instead of writing migrations.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/schema.js</code>, <code>server/seed.js</code>, <code>docs/data-model.md</code> (mermaid diagram)</dd><dt>Needs</dt><dd>WP 1.1 draft for the asset list.</dd><dt>Done when</dt><dd>Fresh PGlite and a Vercel preview both boot cleanly and the feed still loads.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/db/schema.js</code>, <code>backend/db/seed.js</code>, <code>docs/data-model.md</code> (mermaid diagram)</dd><dt>Needs</dt><dd>WP 1.1 draft for the asset list.</dd><dt>Done when</dt><dd>Fresh PGlite and a Vercel preview both boot cleanly and the feed still loads.</dd></dl>
             </div>
 
             <div class="wp" data-owner="mayan">
@@ -525,7 +525,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Added: <code>blindIndex(email)</code> (HMAC of the lower-cased email) and <code>reactionTag(userId, postId)</code>, each with its own prefix.</li>
                 <li><code>scripts/gen-keys.js</code>, half-page <code>docs/crypto.md</code>.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/crypto.js</code>, <code>server/crypto.test.js</code>, <code>scripts/gen-keys.js</code>, <code>docs/crypto.md</code>, <code>.env.example</code></dd><dt>Needs</dt><dd>Nothing. Start now.</dd><dt>Done when</dt><dd><code>npm test</code> is green, including the tamper test and the wrong-key test.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/crypto.js</code>, <code>backend/crypto.test.js</code>, <code>scripts/gen-keys.js</code>, <code>docs/crypto.md</code>, <code>.env.example</code></dd><dt>Needs</dt><dd>Nothing. Start now.</dd><dt>Done when</dt><dd><code>npm test</code> is green, including the tamper test and the wrong-key test.</dd></dl>
             </div>
 
             <div class="gate"><b>Gate 1</b><ul><li>Threat model merged.</li><li>Matrix signed off by all three.</li><li>Schema v2 boots on PGlite and on a Vercel preview.</li><li>Crypto tests green.</li></ul></div>
@@ -551,7 +551,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Same error message for an unknown handle and a wrong password. Login rate limit stored in the database.</li>
                 <li>Seeded demo accounts take their password from <code>DEMO_PASSWORD</code>. Login and sign-up screens.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/auth.js</code>, <code>server/app.js</code>, <code>src/</code> login views</dd><dt>Needs</dt><dd>WP 1.3</dd><dt>Done when</dt><dd>All six demo users log in locally and on the preview; the database only holds bcrypt hashes.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/auth.js</code>, <code>backend/app.js</code>, <code>frontend/src/</code> login views</dd><dt>Needs</dt><dd>WP 1.3</dd><dt>Done when</dt><dd>All six demo users log in locally and on the preview; the database only holds bcrypt hashes.</dd></dl>
             </div>
 
             <div class="wp" data-owner="habiba">
@@ -563,7 +563,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Moderator: queue of brewing and reported cups, approve → <code>served</code>, hide → <code>drained</code>, resolve reports, promote Sipper → Witness only.</li>
                 <li>UI: compose box, my cups, moderation queue, verifier buttons. Buttons are hidden by role for convenience only.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/routes/*.js</code>, <code>src/</code> views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A cup goes brewing → served → drained by clicking through with the demo accounts.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/routes/*.js</code>, <code>frontend/src/</code> views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A cup goes brewing → served → drained by clicking through with the demo accounts.</dd></dl>
             </div>
 
             <div class="wp" data-owner="moaaz">
@@ -574,7 +574,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Prints a pass/fail table that we show in the live demo. Runs against localhost or any URL.</li>
                 <li>Write it from the matrix in WP 1.2 before the routes exist, so it fails first and goes green as WP 2.2 lands.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>scripts/attack.sh</code>, <code>server/rbac.test.js</code></dd><dt>Needs</dt><dd>WP 1.2 to write it, WP 2.2 to pass</dd><dt>Done when</dt><dd>All checks pass against the live site.</dd></dl>
+              <dl><dt>Files</dt><dd><code>scripts/attack.sh</code>, <code>backend/rbac.test.js</code></dd><dt>Needs</dt><dd>WP 1.2 to write it, WP 2.2 to pass</dd><dt>Done when</dt><dd>All checks pass against the live site.</dd></dl>
             </div>
 
             <div class="wp" data-owner="mayan">
@@ -584,7 +584,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li><code>logAudit(actor, action, target)</code> on role changes, approve, hide, verdicts, disables and MFA resets. It never records authorship, reporter identity, codes or decrypted fields.</li>
                 <li>Audit log page for Admin, filterable by action.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/routes/admin.js</code>, <code>server/audit.js</code>, <code>src/</code> admin views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A role change shows in the audit log, and a Moderator trying to make someone Admin gets 403 (added to the attack suite).</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/routes/admin.js</code>, <code>backend/audit.js</code>, <code>frontend/src/</code> admin views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A role change shows in the audit log, and a Moderator trying to make someone Admin gets 403 (added to the attack suite).</dd></dl>
             </div>
 
             <div class="gate"><b>Gate 2</b><ul><li><code>attack.sh</code> fully green on the live site.</li><li>Each of the six roles can be demonstrated.</li><li>Admin actions appear in the audit log.</li></ul></div>
@@ -610,7 +610,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Verifier, Moderator and Admin cannot use their privileged routes until MFA is on.</li>
                 <li>Prototype in Week 7, as the proposal's risk table says.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/mfa.js</code>, <code>server/auth.js</code> (login step), <code>src/</code> MFA views</dd><dt>Needs</dt><dd>WP 1.4, 2.1</dd><dt>Done when</dt><dd>Live login on the Vercel site with a phone authenticator; the database shows only the encrypted secret.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/mfa.js</code>, <code>backend/auth.js</code> (login step), <code>frontend/src/</code> MFA views</dd><dt>Needs</dt><dd>WP 1.4, 2.1</dd><dt>Done when</dt><dd>Live login on the Vercel site with a phone authenticator; the database shows only the encrypted secret.</dd></dl>
             </div>
 
             <div class="wp" data-owner="habiba">
@@ -621,7 +621,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Seed data goes through the same encryption path. Reset the Neon tables.</li>
                 <li>Mayan reviews this PR because it uses her module.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/routes/*.js</code>, <code>server/seed.js</code></dd><dt>Needs</dt><dd>WP 1.4, 2.2</dd><dt>Done when</dt><dd>Raw rows show only <code>v1:…</code> ciphertext, the feed reads normally, and a tampered row fails safely instead of crashing the feed.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/routes/*.js</code>, <code>backend/db/seed.js</code></dd><dt>Needs</dt><dd>WP 1.4, 2.2</dd><dt>Done when</dt><dd>Raw rows show only <code>v1:…</code> ciphertext, the feed reads normally, and a tampered row fails safely instead of crashing the feed.</dd></dl>
             </div>
 
             <div class="wp" data-owner="moaaz">
@@ -631,7 +631,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li>Evidence: certificate screenshot, <code>curl -I</code> showing HSTS, HTTP → HTTPS redirect, Neon connection with certificate checking on.</li>
                 <li>Optional: local HTTPS with a self-signed certificate.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/app.js</code> (headers block only), <code>docs/tls.md</code></dd><dt>Needs</dt><dd>WP 2.1 for cookies</dd><dt>Done when</dt><dd><code>docs/tls.md</code> has the evidence and the app still works with the CSP on.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/app.js</code> (headers block only), <code>docs/tls.md</code></dd><dt>Needs</dt><dd>WP 2.1 for cookies</dd><dt>Done when</dt><dd><code>docs/tls.md</code> has the evidence and the app still works with the CSP on.</dd></dl>
             </div>
 
             <div class="wp" data-owner="moaaz">
@@ -640,7 +640,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li><code>npm run inspect</code>: connects straight to the database and prints raw rows of users, posts, reports and sessions.</li>
                 <li>Admin-only page with the same raw view, proving even an Admin sees ciphertext and no author link.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>scripts/inspect.js</code>, <code>server/routes/admin.js</code> (one route), <code>src/</code> inspect view</dd><dt>Needs</dt><dd>WP 3.2</dd><dt>Done when</dt><dd>Shows ciphertext for all four sensitive fields, ready for the demo.</dd></dl>
+              <dl><dt>Files</dt><dd><code>scripts/inspect.js</code>, <code>backend/routes/admin.js</code> (one route), <code>frontend/src/</code> inspect view</dd><dt>Needs</dt><dd>WP 3.2</dd><dt>Done when</dt><dd>Shows ciphertext for all four sensitive fields, ready for the demo.</dd></dl>
             </div>
 
             <div class="gate"><b>Gate 3</b><ul><li>MFA login works on the live site.</li><li>Raw database view shows ciphertext for email, student ID, content and TOTP secret.</li><li>HTTPS and HSTS evidenced.</li></ul></div>
@@ -676,7 +676,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li><code>GET /api/stats</code> and a “Campus stats” page showing the generalised groups.</li>
                 <li>The raw CSV is git-ignored and never loaded.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>scripts/load-stats.js</code>, <code>server/routes/stats.js</code>, <code>src/</code> stats view, <code>.gitignore</code></dd><dt>Needs</dt><dd>WP 4.1, 1.3</dd><dt>Done when</dt><dd>Live: fresh sample → transform → load → the page updates.</dd></dl>
+              <dl><dt>Files</dt><dd><code>scripts/load-stats.js</code>, <code>backend/routes/stats.js</code>, <code>frontend/src/</code> stats view, <code>.gitignore</code></dd><dt>Needs</dt><dd>WP 4.1, 1.3</dd><dt>Done when</dt><dd>Live: fresh sample → transform → load → the page updates.</dd></dl>
             </div>
 
             <div class="wp" data-owner="all">
@@ -723,7 +723,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
                 <li><code>scripts/rotate-data-key.js</code>: re-encrypts every field from the old key to a new one (<code>v1</code> → <code>v2</code>). <code>PEPPER</code> is not rotated, because that would orphan every ownership tag; the runbook explains this trade-off.</li>
                 <li>Each new admin route is added to the attack suite.</li>
               </ul>
-              <dl><dt>Files</dt><dd><code>server/routes/admin.js</code>, <code>scripts/rotate-data-key.js</code></dd><dt>Needs</dt><dd>WP 2.4, 3.1, 3.2</dd><dt>Done when</dt><dd>All three tools work on the live site and appear in the audit log.</dd></dl>
+              <dl><dt>Files</dt><dd><code>backend/routes/admin.js</code>, <code>scripts/rotate-data-key.js</code></dd><dt>Needs</dt><dd>WP 2.4, 3.1, 3.2</dd><dt>Done when</dt><dd>All three tools work on the live site and appear in the audit log.</dd></dl>
             </div>
 
             <div class="wp" data-owner="mayan">

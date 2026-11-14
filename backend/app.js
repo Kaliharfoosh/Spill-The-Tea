@@ -2,7 +2,7 @@
 // never only in the React UI.
 
 import express from 'express';
-import { query, getDb } from './db.js';
+import { query, getDb } from './db/connection.js';
 
 const app = express();
 app.disable('x-powered-by');

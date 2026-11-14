@@ -9,10 +9,10 @@
   },
   "scripts": {
     "dev": "concurrently -n api,web -c magenta,cyan \"npm:dev:api\" \"npm:dev:web\"",
-    "dev:api": "node --watch --env-file-if-exists=.env server/dev.js",
-    "dev:web": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev:api": "node --watch --env-file-if-exists=.env backend/server.js",
+    "dev:web": "vite frontend",
+    "build": "vite build frontend",
+    "preview": "vite preview frontend",
     "test": "node --test"
   },
   "dependencies": {
