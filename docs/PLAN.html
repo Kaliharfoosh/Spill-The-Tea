@@ -1,0 +1,984 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spill The Tea Delivery Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky contents rail on the left, one reading column on the right; stacks to one column on phones.
+   Colours reuse the app's own tea palette (src/styles.css); each teammate gets one extra hue. */
+:root {
+  --bg: #f7efe4;
+  --surface: #fffaf3;
+  --ink: #2b1d14;
+  --muted: #7a6656;
+  --line: #e6d7c4;
+  --accent: #b5452f;
+  --accent-soft: #f6dcd3;
+  --ok: #2f7a4f;
+  --ok-soft: #dcefe2;
+  --warn: #9a6b12;
+  --warn-soft: #f5e8c8;
+  --habiba: #b5452f;
+  --habiba-soft: #f6dcd3;
+  --mayan: #23708a;
+  --mayan-soft: #d5e9f0;
+  --moaaz: #6a4a99;
+  --moaaz-soft: #e7def4;
+  --all: #6f5d4f;
+  --all-soft: #ece1d4;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --shadow: 0 1px 2px rgba(43, 29, 20, .06), 0 6px 18px rgba(43, 29, 20, .06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1410; --surface: #251c16; --ink: #f3e8dc; --muted: #b09c8a; --line: #3a2d24;
+    --accent: #e8775c; --accent-soft: #3d241c; --ok: #7fcf9e; --ok-soft: #1f3327; --warn: #e3b75a; --warn-soft: #3a2f17;
+    --habiba: #ee8a70; --habiba-soft: #42261e; --mayan: #6cc0dc; --mayan-soft: #17323c;
+    --moaaz: #b79be6; --moaaz-soft: #2f2440; --all: #c8b4a2; --all-soft: #33281f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1410; --surface: #251c16; --ink: #f3e8dc; --muted: #b09c8a; --line: #3a2d24;
+  --accent: #e8775c; --accent-soft: #3d241c; --ok: #7fcf9e; --ok-soft: #1f3327; --warn: #e3b75a; --warn-soft: #3a2f17;
+  --habiba: #ee8a70; --habiba-soft: #42261e; --mayan: #6cc0dc; --mayan-soft: #17323c;
+  --moaaz: #b79be6; --moaaz-soft: #2f2440; --all: #c8b4a2; --all-soft: #33281f;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15.5px/1.6 var(--font-body); }
+table { font-size: inherit; border-collapse: collapse; }
+h1, h2, h3, h4 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+code, .mono { font-family: var(--font-mono); font-size: .86em; }
+code { background: var(--all-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.2em; }
+li + li { margin-top: .25em; }
+
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+
+.shell {
+  max-width: 1160px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+
+/* ---------- header ---------- */
+.masthead { display: grid; gap: 10px; padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+.eyebrow { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.masthead h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; }
+.masthead h1 .pot { display: inline-block; transform: rotate(-12deg); margin-right: 6px; }
+.masthead .lede { max-width: 70ch; color: var(--muted); font-size: 16px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 600; }
+
+/* ---------- filter bar ---------- */
+.filter {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 10px; margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.filter span.lbl { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.chip-btn {
+  font: 500 13px var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 999px; padding: 5px 12px; cursor: pointer;
+}
+.chip-btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip-btn .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+/* ---------- two-column layout ---------- */
+.layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 36px; align-items: start; }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 70px); font-size: 13.5px; }
+.toc ol { list-style: none; padding: 0; display: grid; gap: 2px; }
+.toc li + li { margin-top: 0; }
+.toc a { display: block; padding: 4px 10px; border-radius: 6px; color: var(--muted); text-decoration: none; }
+.toc a:hover { background: var(--surface); color: var(--ink); }
+.toc .sub a { padding-left: 22px; font-size: 13px; }
+main { display: grid; gap: 52px; min-width: 0; }
+section { display: grid; gap: 18px; scroll-margin-top: 80px; min-width: 0; }
+section > h2 { font-size: clamp(23px, 3vw, 29px); font-weight: 800; }
+section > .intro { max-width: 72ch; color: var(--muted); }
+h3 { font-size: 19px; font-weight: 600; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: static; }
+  .toc ol { display: flex; flex-wrap: wrap; gap: 4px; }
+  .toc .sub { display: none; }
+  .toc a { border: 1px solid var(--line); background: var(--surface); }
+}
+
+/* ---------- generic blocks ---------- */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .grid-3, .grid-2 { grid-template-columns: minmax(0, 1fr); } }
+.panel h3 { font-size: 16.5px; }
+.panel.ok { border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+.panel.warn { border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); }
+.panel.bad { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.tag { display: inline-flex; align-items: center; gap: 6px; font: 600 11.5px var(--font-body); letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; width: fit-content; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+.tag.bad { background: var(--accent-soft); color: var(--accent); }
+.small { font-size: 13.5px; color: var(--muted); }
+.panel ul { font-size: 14.5px; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.table-wrap table { width: 100%; min-width: 560px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: color-mix(in srgb, var(--all-soft) 55%, var(--surface)); }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.matrix td, .matrix th { text-align: center; }
+.matrix td:first-child, .matrix th:first-child { text-align: left; }
+.y { color: var(--ok); font-weight: 700; }
+.n { color: var(--muted); opacity: .55; }
+.never td { background: var(--accent-soft); }
+.never td:first-child { color: var(--accent); font-weight: 600; }
+
+/* owner + size chips */
+.who { display: inline-block; font: 600 12px var(--font-body); padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.who-habiba { background: var(--habiba-soft); color: var(--habiba); }
+.who-mayan { background: var(--mayan-soft); color: var(--mayan); }
+.who-moaaz { background: var(--moaaz-soft); color: var(--moaaz); }
+.who-all { background: var(--all-soft); color: var(--all); }
+.size { font: 500 12px var(--font-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+
+/* ---------- gantt ---------- */
+.gantt { display: grid; grid-template-columns: 170px repeat(11, minmax(34px, 1fr)); min-width: 640px; font-size: 13px; }
+.gantt > div { padding: 7px 6px; border-bottom: 1px solid var(--line); }
+.gantt .wk { text-align: center; color: var(--muted); font: 500 12px var(--font-mono); }
+.gantt .row-label { font-weight: 600; }
+.bar { border-radius: 6px; margin: 2px 0; padding: 4px 8px !important; font-size: 12px; font-weight: 600; border-bottom: 0 !important; align-self: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar.done { background: var(--ok-soft); color: var(--ok); }
+.bar.next { background: var(--accent-soft); color: var(--accent); }
+.bar.later { background: var(--all-soft); color: var(--all); }
+.bar.key { background: var(--warn-soft); color: var(--warn); }
+
+/* ---------- phases ---------- */
+.phase { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; scroll-margin-top: 80px; }
+.phase-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 16px; align-items: baseline; padding: 18px 20px 14px; border-bottom: 1px solid var(--line); }
+.phase-no { font: 800 34px var(--font-display); color: var(--accent); line-height: 1; grid-row: span 2; }
+.phase-head h3 { font-size: 21px; font-weight: 800; }
+.phase-head .weeks { font: 500 12.5px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.phase-head .goal { grid-column: 2 / 4; color: var(--muted); font-size: 14.5px; }
+.phase-body { padding: 16px 20px 20px; display: grid; gap: 14px; }
+@media (max-width: 560px) {
+  .phase-head { grid-template-columns: auto minmax(0, 1fr); }
+  .phase-head .weeks { grid-column: 2; }
+  .phase-head .goal { grid-column: 1 / 3; }
+}
+
+.wp { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 9px; background: var(--bg); transition: opacity .15s; min-width: 0; }
+.wp-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.wp-id { font: 600 13px var(--font-mono); color: var(--muted); }
+.wp h4 { font: 600 16px var(--font-body); margin-right: auto; }
+.wp ul { font-size: 14.5px; }
+.wp dl { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 4px 12px; margin: 0; font-size: 13.5px; }
+.wp dt { color: var(--muted); font-weight: 600; }
+.wp dd { margin: 0; min-width: 0; }
+@media (max-width: 480px) { .wp dl { grid-template-columns: minmax(0, 1fr); } .wp dd { margin-bottom: 4px; } }
+
+.gate { border-radius: 10px; padding: 12px 16px; background: var(--ok-soft); display: grid; gap: 6px; }
+.gate b { color: var(--ok); font-size: 13px; letter-spacing: .05em; text-transform: uppercase; }
+.gate ul { font-size: 14px; }
+.viva { border-left: 3px solid var(--warn); padding: 4px 0 4px 14px; display: grid; gap: 4px; }
+.viva b { color: var(--warn); font-size: 13px; letter-spacing: .05em; text-transform: uppercase; }
+.viva ul { font-size: 14px; }
+
+/* person filter: dim work that isn't yours (shared work stays) */
+#plan[data-who="habiba"] [data-owner]:not([data-owner~="habiba"]):not([data-owner~="all"]),
+#plan[data-who="mayan"] [data-owner]:not([data-owner~="mayan"]):not([data-owner~="all"]),
+#plan[data-who="moaaz"] [data-owner]:not([data-owner~="moaaz"]):not([data-owner~="all"]) { opacity: .25; }
+
+/* ---------- workload ---------- */
+.load { display: grid; gap: 14px; }
+.load-row { display: grid; grid-template-columns: 90px minmax(0, 1fr) 54px; gap: 12px; align-items: center; }
+.load-row .name { font-weight: 600; }
+.load-bar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; background: var(--all-soft); gap: 2px; }
+.load-bar span { display: flex; align-items: center; justify-content: center; font: 500 11px var(--font-mono); color: var(--surface); min-width: 0; overflow: hidden; }
+.load-row .pts { font: 600 14px var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.seg-habiba { background: var(--habiba); }
+.seg-mayan { background: var(--mayan); }
+.seg-moaaz { background: var(--moaaz); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+
+.rules { counter-reset: rule; list-style: none; padding: 0; display: grid; gap: 8px; font-size: 14.5px; }
+.rules li { counter-increment: rule; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px; margin: 0; }
+.rules li::before { content: counter(rule, decimal-leading-zero); font: 600 12px var(--font-mono); color: var(--accent); padding-top: 3px; }
+
+.callout { background: var(--warn-soft); border-radius: 10px; padding: 12px 16px; font-size: 14.5px; }
+.callout b { color: var(--warn); }
+footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="shell" id="plan" data-who="all">
+
+  <header class="masthead">
+    <div class="eyebrow">BUE · Data Privacy 26CSCN26H · Option 1: Secure &amp; Privacy-Hardened Mini-Application</div>
+    <h1><span class="pot" aria-hidden="true">🫖</span>Spill The Tea Delivery Plan</h1>
+    <p class="lede">From where the repo is today to the Week 12 demo. Built only from what we promised in the proposal and what the module brief requires: RBAC, TOTP MFA, encryption at rest and in transit, a k-anonymity transform, and a contingency runbook. Work is split by complexity points, so each of us carries the same load and owns one hard technical piece and one live-demo moment.</p>
+    <div class="meta">
+      <span><b>Team</b> Habiba Harfoosh · Mayan Nassar · Moaaz Saeed</span>
+      <span><b>Plan date</b> 14 Nov 2026</span>
+      <span><b>Based on</b> proposal, project brief, repo at <code>644f60f</code></span>
+      <span><b>Live</b> spill-the-tea-jet.vercel.app</span>
+    </div>
+  </header>
+
+  <div class="filter" role="group" aria-label="Highlight one person's work">
+    <span class="lbl">Highlight work for</span>
+    <button class="chip-btn" type="button" data-who-btn="all" aria-pressed="true">Everyone</button>
+    <button class="chip-btn" type="button" data-who-btn="habiba" aria-pressed="false"><span class="dot seg-habiba"></span>Habiba</button>
+    <button class="chip-btn" type="button" data-who-btn="mayan" aria-pressed="false"><span class="dot seg-mayan"></span>Mayan</button>
+    <button class="chip-btn" type="button" data-who-btn="moaaz" aria-pressed="false"><span class="dot seg-moaaz"></span>Moaaz</button>
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Contents">
+      <ol>
+        <li><a href="#status">Where we are</a></li>
+        <li><a href="#grading">What gets marked</a></li>
+        <li><a href="#gaps">Gaps to close</a></li>
+        <li><a href="#rules">Rules</a></li>
+        <li><a href="#scope">Scope guard</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li><a href="#phases">Phases</a></li>
+        <li class="sub"><a href="#p1">1 · Design</a></li>
+        <li class="sub"><a href="#p2">2 · Access control</a></li>
+        <li class="sub"><a href="#p3">3 · MFA &amp; encryption</a></li>
+        <li class="sub"><a href="#p4">4 · Anonymisation</a></li>
+        <li class="sub"><a href="#p5">5 · Contingency</a></li>
+        <li class="sub"><a href="#p6">6 · Report &amp; demo</a></li>
+        <li><a href="#matrix">Permission matrix</a></li>
+        <li><a href="#workload">Workload split</a></li>
+        <li><a href="#demo">Demo run-sheet</a></li>
+        <li><a href="#report">Report split</a></li>
+        <li><a href="#risks">Risks</a></li>
+        <li><a href="#decisions">Open decisions</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- ================= STATUS ================= -->
+      <section id="status">
+        <h2>Where we are</h2>
+        <p class="intro">Snapshot of the repository on 14 Nov 2026. The <code>mayan</code> and <code>moaaz</code> branches only add the name files, so Task A and Task B from <code>docs/TASKS.md</code> have no code yet.</p>
+        <div class="grid-3">
+          <div class="panel ok">
+            <span class="tag ok">Done</span>
+            <ul>
+              <li>React 19 + Vite frontend, Express 5 API</li>
+              <li>Vercel deploy (Frankfurt) + Neon Postgres over TLS</li>
+              <li>PGlite for zero-setup local runs</li>
+              <li><code>posts</code> table with no <code>user_id</code></li>
+              <li>Public feed shows only <code>served</code> cups, with fuzzy times</li>
+              <li>HSTS, nosniff, no-referrer, no-store headers; 20 kb body limit</li>
+              <li>Demo seed data, team task briefs</li>
+            </ul>
+          </div>
+          <div class="panel warn">
+            <span class="tag warn">Briefed, no code yet</span>
+            <ul>
+              <li>Task A: crypto module (Mayan)</li>
+              <li>Task B: k-anonymity script + threat model (Moaaz)</li>
+              <li>Task C: login, roles, posting (Habiba)</li>
+            </ul>
+            <p class="small">These briefs are folded into the work packages below. Nothing in them changes except the small additions marked “added”.</p>
+          </div>
+          <div class="panel bad">
+            <span class="tag bad">Not started</span>
+            <ul>
+              <li>Permission matrix and <code>requirePerm()</code></li>
+              <li>Accounts, sessions, MFA</li>
+              <li>Encryption at rest, author / reporter tags</li>
+              <li>Moderation, verdicts, reports, audit log</li>
+              <li>Inspection console, stats loading</li>
+              <li>Runbook, continuity drill, report, slides</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= GRADING ================= -->
+      <section id="grading">
+        <h2>What gets marked, and where this plan covers it</h2>
+        <p class="intro">Marks are per student, and anyone who misses the individual discussion gets zero for the whole coursework. That is why every phase below ends with viva questions.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Component</th><th class="num">Weight</th><th>How the plan earns it</th></tr></thead>
+            <tbody>
+              <tr><td>Working implementation &amp; live demo</td><td class="num">35%</td><td>Phases 2–4 build the four live-demo proofs; the <a href="#demo">run-sheet</a> rehearses them; backup video in Week 11.</td></tr>
+              <tr><td>Individual discussion</td><td class="num">30%</td><td>Explain-back rule on every PR, viva questions per phase, mock viva on a part you did not build (WP 6.5).</td></tr>
+              <tr><td>Contingency &amp; business continuity</td><td class="num">20%</td><td>Phase 5: a runbook backed by real admin tools (reset MFA, revoke sessions, key rotation, restore, rollback) and a timed drill.</td></tr>
+              <tr><td>Group presentation &amp; coordination</td><td class="num">10%</td><td>8–10 minutes, each of us presents about three minutes, including a live part.</td></tr>
+              <tr><td>Build log</td><td class="num">5%</td><td>One line in <code>BUILD_LOG.md</code> per merged work package, with the security reason.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= GAPS ================= -->
+      <section id="gaps">
+        <h2>Gaps between the brief and our current task list</h2>
+        <p class="intro">These are required by the brief or promised in the proposal, but missing from <code>docs/TASKS.md</code>. Each one now has a work package.</p>
+        <div class="grid-2">
+          <div class="panel"><h3>Anonymised data must go back into the app</h3><p class="small">Brief task 5 says “load the anonymised version in”. Task B stops at a CSV file. Fixed by WP 4.2.</p></div>
+          <div class="panel"><h3>Contingency needs real tools</h3><p class="small">20% of the mark, judged on walking it through operationally. We need working “reset MFA”, “revoke sessions”, restore and rollback steps. WP 5.2, 5.3.</p></div>
+          <div class="panel"><h3>Admin audit log</h3><p class="small">The proposal says Admin can view audit logs. There is no audit table. WP 2.4.</p></div>
+          <div class="panel"><h3>Encrypted email can't be looked up</h3><p class="small">AES-GCM with a random IV gives different ciphertext each time, so uniqueness checks fail. Add an HMAC “blind index” column. WP 1.3, 1.4.</p></div>
+          <div class="panel"><h3>Reactions can be spammed</h3><p class="small">Reactions are bare counters. Add an HMAC reaction tag so each user reacts once per cup without storing who. WP 1.3, 3.2.</p></div>
+          <div class="panel"><h3>Demo accounts have no passwords</h3><p class="small">Seed users need passwords for the demo. They come from a <code>DEMO_PASSWORD</code> env var, never the repo. WP 2.1.</p></div>
+        </div>
+      </section>
+
+      <!-- ================= RULES ================= -->
+      <section id="rules">
+        <h2>Rules</h2>
+        <p class="intro">Four sets. The privacy rules are copied from <code>CLAUDE.md</code> and are not negotiable. A PR that breaks one does not merge.</p>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>A · Privacy &amp; security</h3>
+            <ol class="rules">
+              <li>No one can unmask a poster, admins included. <code>posts</code> never gets a <code>user_id</code>. Ownership is <code>HMAC-SHA256(PEPPER, user_id:post_id)</code>.</li>
+              <li>Access control lives in the API: <code>requirePerm()</code> on every route. Hiding a button is never the check.</li>
+              <li>Six roles. No role has an <code>unmask</code> permission, and no route for it exists.</li>
+              <li>Email, student ID, post content and TOTP secrets are AES-256-GCM encrypted at rest. Keys come from env vars only.</li>
+              <li>Passwords use bcrypt. MFA uses TOTP (speakeasy + qrcode).</li>
+              <li>Never log authors, reporter identities, passwords, codes or decrypted data.</li>
+              <li>Clients only ever see fuzzy time labels, never exact timestamps.</li>
+              <li>Reports store a hashed reporter tag, never a reporter id.</li>
+              <li>Secrets only in <code>.env</code> or Vercel env vars. Only synthetic data, never real student data.</li>
+            </ol>
+          </div>
+          <div class="panel">
+            <h3>B · How we work in git</h3>
+            <ol class="rules">
+              <li>Pull <code>main</code>, then work on your own branch: <code>habiba</code>, <code>mayan</code>, <code>moaaz</code>.</li>
+              <li>Only edit the files listed in your work package. Shared files (<code>server/schema.js</code>, <code>server/app.js</code>) need a heads-up in the group chat first.</li>
+              <li>Open a PR into <code>main</code>. Nobody merges their own PR: Habiba reviews Mayan and Moaaz; Mayan or Moaaz reviews Habiba.</li>
+              <li>Review within 24 hours. Habiba's work is the critical path, so slow reviews delay everyone.</li>
+              <li>Every PR description has three lines: what, security reason, how to test.</li>
+              <li><code>npm test</code> and <code>scripts/attack.sh</code> pass locally before merging. Vercel's free plan blocks previews of Mayan's and Moaaz's commits, so Habiba merges with “Create a merge commit” only (squash and rebase keep the teammate as author, which Vercel blocks) and checks the production deploy.</li>
+              <li>One line in <code>BUILD_LOG.md</code> per merged work package. Write “(with Claude)” when AI helped.</li>
+            </ol>
+          </div>
+          <div class="panel">
+            <h3>C · Everyone understands everything</h3>
+            <ol class="rules">
+              <li>Explain-back: before a PR merges, its author explains it in two minutes to a teammate who did not build it.</li>
+              <li>Keep code simple. Comment the security reason wherever it isn't obvious.</li>
+              <li>30-minute knowledge swap every week: each person demos what they merged.</li>
+              <li>If AI wrote a line, you must be able to explain that line. Otherwise rewrite it.</li>
+              <li>Each of us runs the full demo alone at least once before Week 12.</li>
+            </ol>
+          </div>
+          <div class="panel">
+            <h3>D · Scope discipline</h3>
+            <ol class="rules">
+              <li>If it is not in the proposal or the brief, it goes to a “Parking lot” list at the bottom of <code>docs/TASKS.md</code>, not into the code.</li>
+              <li>Parking-lot items are only picked up after the Phase 5 gate passes.</li>
+              <li>Cut order if we fall behind by Week 8: stretch work first, then stats page polish, then UI polish. Never cut a brief requirement or the runbook.</li>
+              <li>Each phase ends with a gate. The next phase's work can start early, but nothing counts as done until its gate passes.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SCOPE ================= -->
+      <section id="scope">
+        <h2>Scope guard</h2>
+        <div class="grid-2">
+          <div class="panel ok">
+            <span class="tag ok">In scope</span>
+            <ul>
+              <li>Six roles with the abilities in the proposal, enforced in the API</li>
+              <li>Sign up, log in, sessions, bcrypt</li>
+              <li>TOTP MFA (mandatory for Verifier, Moderator, Admin)</li>
+              <li>Encrypted email, student ID, post content, TOTP secret; TLS in transit</li>
+              <li>Cup life-cycle: brewing → served / drained; verdicts; reactions; reports</li>
+              <li>Admin user management and audit log</li>
+              <li>k-anonymity transform on a synthetic stats dataset, loaded into the app</li>
+              <li>Runbook for a misconfigured role and a leaked MFA secret, with real tools</li>
+              <li>Report, contribution statement, build log, 8–10 minute presentation</li>
+            </ul>
+          </div>
+          <div class="panel bad">
+            <span class="tag bad">Out of scope</span>
+            <ul>
+              <li>Comments, replies, DMs, notifications, sending email</li>
+              <li>Search, hashtags, user profiles</li>
+              <li>BUE single sign-on or real student email verification</li>
+              <li>Mobile app, ML auto-moderation, differential privacy</li>
+              <li>Docker (the brief accepts running locally; we have that plus Vercel)</li>
+              <li>Real student data in any form</li>
+              <li>“New cups served” banner (moved to the parking lot)</li>
+            </ul>
+            <p class="small"><b>Stretch, only if the Phase 3 gate passes by end of Week 8:</b> photo uploads with EXIF stripping (<code>sharp</code>), 3 points, given to whoever is furthest ahead. If we skip uploads, the threat model records “no uploads” as the control for photo metadata.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TIMELINE ================= -->
+      <section id="timeline">
+        <h2>Timeline</h2>
+        <p class="intro">Weeks follow the milestone plan in our proposal. If the calendar is already ahead of this, keep the phase order and compress Phase 1: Mayan's crypto module and Moaaz's threat model can run alongside Phase 2.</p>
+        <div class="table-wrap">
+          <div class="gantt" role="table" aria-label="Phases by week">
+            <div class="row-label"></div>
+            <div class="wk">W2</div><div class="wk">W3</div><div class="wk">W4</div><div class="wk">W5</div><div class="wk">W6</div><div class="wk">W7</div><div class="wk">W8</div><div class="wk">W9</div><div class="wk">W10</div><div class="wk">W11</div><div class="wk">W12</div>
+
+            <div class="row-label">0 · Foundation</div>
+            <div class="bar done" style="grid-column: 2 / span 1">Done</div><div style="grid-column: 3 / span 10"></div>
+
+            <div class="row-label">1 · Design</div>
+            <div style="grid-column: 2 / span 1"></div><div class="bar next" style="grid-column: 3 / span 2">Threat model, matrix, crypto</div><div style="grid-column: 5 / span 8"></div>
+
+            <div class="row-label">2 · Access control</div>
+            <div style="grid-column: 2 / span 3"></div><div class="bar later" style="grid-column: 5 / span 2">RBAC, flows, attack.sh</div><div style="grid-column: 7 / span 6"></div>
+
+            <div class="row-label">3 · MFA &amp; encryption</div>
+            <div style="grid-column: 2 / span 5"></div><div class="bar later" style="grid-column: 7 / span 2">TOTP, AES-GCM, TLS</div><div style="grid-column: 9 / span 4"></div>
+
+            <div class="row-label">4 · Anonymisation</div>
+            <div style="grid-column: 2 / span 7"></div><div class="bar key" style="grid-column: 9 / span 1">k-anon + lab</div><div style="grid-column: 10 / span 3"></div>
+
+            <div class="row-label">5 · Contingency</div>
+            <div style="grid-column: 2 / span 8"></div><div class="bar later" style="grid-column: 10 / span 1">Runbook</div><div style="grid-column: 11 / span 2"></div>
+
+            <div class="row-label">6 · Report &amp; demo</div>
+            <div style="grid-column: 2 / span 9"></div><div class="bar key" style="grid-column: 11 / span 2">Draft W11 · submit W12</div>
+          </div>
+        </div>
+        <p class="small">Fixed dates from the brief: Week 9 informal lab check-in, Week 11 draft report and slides substantially complete, Week 12 submission and presentations.</p>
+      </section>
+
+      <!-- ================= PHASES ================= -->
+      <section id="phases">
+        <h2>Phases and work packages</h2>
+        <p class="intro">Each work package (WP) has one owner, a complexity size, the files it touches, what it depends on, and a concrete “done when”. Sizes: <b>S·1</b> a few hours (config, a doc page) · <b>M·2</b> one feature in one area, 1–2 days · <b>L·3</b> a multi-file feature with tests, 3–4 days · <b>XL·5</b> cross-cutting core work, about a week.</p>
+
+        <div class="callout"><b>Applies to every WP.</b> Merged to <code>main</code> through a reviewed PR, works on the live Vercel site, has a test or an attack check, has a <code>BUILD_LOG.md</code> line, breaks none of the privacy rules, and the owner can explain every line.</div>
+
+        <!-- ---------- PHASE 1 ---------- -->
+        <article class="phase" id="p1">
+          <div class="phase-head">
+            <span class="phase-no">1</span>
+            <h3>Design &amp; crypto groundwork</h3>
+            <span class="weeks">Weeks 3–4</span>
+            <p class="goal">Decide what we protect and who may do what before writing routes. The crypto library has no dependencies, so it starts now.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 1.1</span><h4>Threat model &amp; risk register</h4><span class="who who-moaaz">Moaaz</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Assets: poster identity, post content, student email and ID, passwords, TOTP secrets, reporter identity, encryption keys.</li>
+                <li>Attackers: curious admin, student trying to escalate their role, database thief, network sniffer, insider with access to server env vars.</li>
+                <li>STRIDE table where every threat maps to its control and to the WP in this plan that builds it. Rate each risk likelihood × impact (1–3).</li>
+                <li>Residual risks section, e.g. someone holding both the database and <code>PEPPER</code> could brute-force author tags. App admins do not have env access, so the app-level promise still holds.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>docs/threat-model.md</code></dd><dt>Needs</dt><dd>Nothing. Start from section 4 of the proposal.</dd><dt>Done when</dt><dd>Every threat row points to a WP; both teammates have reviewed it.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 1.2</span><h4>Permission matrix</h4><span class="who who-habiba">Habiba</span><span class="size">M·2</span></div>
+              <ul>
+                <li><code>PERMISSIONS</code> map from role to capabilities, a <code>can(role, perm)</code> helper and <code>requirePerm(perm)</code> middleware: 401 when not logged in, 403 when the role lacks it.</li>
+                <li>Unit test: every role × capability matches the <a href="#matrix">matrix</a>; no role has <code>author:unmask</code>.</li>
+                <li>The matrix doc explains why each role differs from Sipper by one capability group.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/permissions.js</code>, <code>server/permissions.test.js</code>, <code>docs/permissions.md</code></dd><dt>Needs</dt><dd>Team agreement on the <a href="#decisions">open decisions</a> about roles.</dd><dt>Done when</dt><dd>Test passes and Mayan and Moaaz have signed off the table. It drives the attack suite and the admin console.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 1.3</span><h4>Schema v2 &amp; data model</h4><span class="who who-habiba">Habiba</span><span class="size">M·2</span></div>
+              <ul>
+                <li><code>users</code>: add <code>email_enc</code>, <code>email_hash</code> (blind index, unique), <code>student_id_enc</code>, <code>totp_secret_enc</code>, <code>mfa_enabled</code>, <code>session_version</code>, <code>disabled</code>.</li>
+                <li><code>posts</code>: <code>content</code> becomes <code>content_enc</code>; add <code>author_tag</code>. Still no <code>user_id</code>.</li>
+                <li>New tables: <code>sessions</code>, <code>reports</code> (unique <code>reporter_tag</code> per cup), <code>reaction_marks</code> (unique reaction tag), <code>audit_log</code>, <code>campus_stats</code>.</li>
+                <li>Neon only holds demo data, so we reset tables with a documented command instead of writing migrations.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/schema.js</code>, <code>server/seed.js</code>, <code>docs/data-model.md</code> (mermaid diagram)</dd><dt>Needs</dt><dd>WP 1.1 draft for the asset list.</dd><dt>Done when</dt><dd>Fresh PGlite and a Vercel preview both boot cleanly and the feed still loads.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 1.4</span><h4>Crypto module (Task A)</h4><span class="who who-mayan">Mayan</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Exactly as briefed in <code>docs/TASKS.md</code>: <code>encrypt</code> / <code>decrypt</code> (AES-256-GCM, <code>v1:iv:tag:ct</code>), <code>authorTag</code>, <code>reporterTag</code>, <code>safeEqual</code>.</li>
+                <li>Added: <code>blindIndex(email)</code> (HMAC of the lower-cased email) and <code>reactionTag(userId, postId)</code>, each with its own prefix.</li>
+                <li><code>scripts/gen-keys.js</code>, half-page <code>docs/crypto.md</code>.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/crypto.js</code>, <code>server/crypto.test.js</code>, <code>scripts/gen-keys.js</code>, <code>docs/crypto.md</code>, <code>.env.example</code></dd><dt>Needs</dt><dd>Nothing. Start now.</dd><dt>Done when</dt><dd><code>npm test</code> is green, including the tamper test and the wrong-key test.</dd></dl>
+            </div>
+
+            <div class="gate"><b>Gate 1</b><ul><li>Threat model merged.</li><li>Matrix signed off by all three.</li><li>Schema v2 boots on PGlite and on a Vercel preview.</li><li>Crypto tests green.</li></ul></div>
+            <div class="viva"><b>Viva prep</b><ul><li>Why HMAC with a secret pepper instead of a plain SHA-256 of the user id?</li><li>Why must a GCM IV never repeat under the same key?</li><li>Why does an encrypted email need a separate blind index?</li></ul></div>
+          </div>
+        </article>
+
+        <!-- ---------- PHASE 2 ---------- -->
+        <article class="phase" id="p2">
+          <div class="phase-head">
+            <span class="phase-no">2</span>
+            <h3>Access control &amp; core flows</h3>
+            <span class="weeks">Weeks 5–6</span>
+            <p class="goal">Every role can do exactly its job and nothing more, enforced in the API and proven by an automated attack suite.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 2.1</span><h4>Accounts &amp; sessions</h4><span class="who who-habiba">Habiba</span><span class="size">L·3</span></div>
+              <ul>
+                <li><code>POST /api/auth/signup</code>, <code>/login</code>, <code>/logout</code>, <code>GET /api/me</code>. bcrypt with cost 12.</li>
+                <li>Random session token in an HttpOnly, Secure, SameSite=Strict cookie. Only the token's hash is stored in <code>sessions</code>, because Vercel functions have no shared memory.</li>
+                <li>Same error message for an unknown handle and a wrong password. Login rate limit stored in the database.</li>
+                <li>Seeded demo accounts take their password from <code>DEMO_PASSWORD</code>. Login and sign-up screens.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/auth.js</code>, <code>server/app.js</code>, <code>src/</code> login views</dd><dt>Needs</dt><dd>WP 1.3</dd><dt>Done when</dt><dd>All six demo users log in locally and on the preview; the database only holds bcrypt hashes.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 2.2</span><h4>Role-gated cup flows</h4><span class="who who-habiba">Habiba</span><span class="size">XL·5</span></div>
+              <ul>
+                <li>Spiller: create a cup (starts <code>brewing</code>), edit and delete own cups. Ownership is checked by recomputing the author tag.</li>
+                <li>Everyone logged in: react ☕ 🧊 🫖 and report. Witness reactions are marked as witnessed.</li>
+                <li>Verifier: verdict <code>steeped</code> or <code>weak</code>.</li>
+                <li>Moderator: queue of brewing and reported cups, approve → <code>served</code>, hide → <code>drained</code>, resolve reports, promote Sipper → Witness only.</li>
+                <li>UI: compose box, my cups, moderation queue, verifier buttons. Buttons are hidden by role for convenience only.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/routes/*.js</code>, <code>src/</code> views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A cup goes brewing → served → drained by clicking through with the demo accounts.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 2.3</span><h4>Role-attack suite</h4><span class="who who-moaaz">Moaaz</span><span class="size">M·2</span></div>
+              <ul>
+                <li>Logs in as each role and calls every endpoint that role must not reach; expects 401 or 403.</li>
+                <li>Also checks that brewing cups never reach a Sipper's feed, and that no API response contains a user id or author field.</li>
+                <li>Prints a pass/fail table that we show in the live demo. Runs against localhost or any URL.</li>
+                <li>Write it from the matrix in WP 1.2 before the routes exist, so it fails first and goes green as WP 2.2 lands.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>scripts/attack.sh</code>, <code>server/rbac.test.js</code></dd><dt>Needs</dt><dd>WP 1.2 to write it, WP 2.2 to pass</dd><dt>Done when</dt><dd>All checks pass against the live site.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 2.4</span><h4>Admin console &amp; audit log</h4><span class="who who-mayan">Mayan</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Admin page: list users (handle, role, MFA on or off), change role, disable account.</li>
+                <li><code>logAudit(actor, action, target)</code> on role changes, approve, hide, verdicts, disables and MFA resets. It never records authorship, reporter identity, codes or decrypted fields.</li>
+                <li>Audit log page for Admin, filterable by action.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/routes/admin.js</code>, <code>server/audit.js</code>, <code>src/</code> admin views</dd><dt>Needs</dt><dd>WP 1.2, 2.1</dd><dt>Done when</dt><dd>A role change shows in the audit log, and a Moderator trying to make someone Admin gets 403 (added to the attack suite).</dd></dl>
+            </div>
+
+            <div class="gate"><b>Gate 2</b><ul><li><code>attack.sh</code> fully green on the live site.</li><li>Each of the six roles can be demonstrated.</li><li>Admin actions appear in the audit log.</li></ul></div>
+            <div class="viva"><b>Viva prep</b><ul><li>Why is hiding a button not access control?</li><li>How does a Spiller edit their own cup when the post has no user id?</li><li>Why return the same error for a wrong username and a wrong password?</li></ul></div>
+          </div>
+        </article>
+
+        <!-- ---------- PHASE 3 ---------- -->
+        <article class="phase" id="p3">
+          <div class="phase-head">
+            <span class="phase-no">3</span>
+            <h3>MFA, encryption at rest, TLS</h3>
+            <span class="weeks">Weeks 7–8</span>
+            <p class="goal">Build the three things the demo must prove live: an MFA login, ciphertext in the database, and encrypted transport.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 3.1</span><h4>TOTP MFA</h4><span class="who who-mayan">Mayan</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Enrol: speakeasy secret, QR code, user confirms the first code, secret saved through <code>encrypt()</code>.</li>
+                <li>Login becomes two steps: password, then a 6-digit code. Window ±1 step, each code usable once, rate limited.</li>
+                <li>Verifier, Moderator and Admin cannot use their privileged routes until MFA is on.</li>
+                <li>Prototype in Week 7, as the proposal's risk table says.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/mfa.js</code>, <code>server/auth.js</code> (login step), <code>src/</code> MFA views</dd><dt>Needs</dt><dd>WP 1.4, 2.1</dd><dt>Done when</dt><dd>Live login on the Vercel site with a phone authenticator; the database shows only the encrypted secret.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 3.2</span><h4>Wire encryption into the data</h4><span class="who who-habiba">Habiba</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Encrypt email and student ID (plus the blind index) and post content. Decrypt only when serving a served cup.</li>
+                <li>Author tag on create, reporter tag on report (one report per user per cup), reaction tag for one reaction per user.</li>
+                <li>Seed data goes through the same encryption path. Reset the Neon tables.</li>
+                <li>Mayan reviews this PR because it uses her module.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/routes/*.js</code>, <code>server/seed.js</code></dd><dt>Needs</dt><dd>WP 1.4, 2.2</dd><dt>Done when</dt><dd>Raw rows show only <code>v1:…</code> ciphertext, the feed reads normally, and a tampered row fails safely instead of crashing the feed.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 3.3</span><h4>TLS &amp; header hardening</h4><span class="who who-moaaz">Moaaz</span><span class="size">S·1</span></div>
+              <ul>
+                <li>Add Content-Security-Policy and Permissions-Policy headers; confirm cookie flags.</li>
+                <li>Evidence: certificate screenshot, <code>curl -I</code> showing HSTS, HTTP → HTTPS redirect, Neon connection with certificate checking on.</li>
+                <li>Optional: local HTTPS with a self-signed certificate.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/app.js</code> (headers block only), <code>docs/tls.md</code></dd><dt>Needs</dt><dd>WP 2.1 for cookies</dd><dt>Done when</dt><dd><code>docs/tls.md</code> has the evidence and the app still works with the CSP on.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 3.4</span><h4>Spill Inspection console</h4><span class="who who-moaaz">Moaaz</span><span class="size">M·2</span></div>
+              <ul>
+                <li><code>npm run inspect</code>: connects straight to the database and prints raw rows of users, posts, reports and sessions.</li>
+                <li>Admin-only page with the same raw view, proving even an Admin sees ciphertext and no author link.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>scripts/inspect.js</code>, <code>server/routes/admin.js</code> (one route), <code>src/</code> inspect view</dd><dt>Needs</dt><dd>WP 3.2</dd><dt>Done when</dt><dd>Shows ciphertext for all four sensitive fields, ready for the demo.</dd></dl>
+            </div>
+
+            <div class="gate"><b>Gate 3</b><ul><li>MFA login works on the live site.</li><li>Raw database view shows ciphertext for email, student ID, content and TOTP secret.</li><li>HTTPS and HSTS evidenced.</li></ul></div>
+            <div class="viva"><b>Viva prep</b><ul><li>What does the GCM authentication tag protect against?</li><li>What happens if <code>DATA_KEY</code> leaks, and what if <code>PEPPER</code> leaks?</li><li>Why accept ±1 time step, and why block a code from being reused?</li></ul></div>
+          </div>
+        </article>
+
+        <!-- ---------- PHASE 4 ---------- -->
+        <article class="phase" id="p4">
+          <div class="phase-head">
+            <span class="phase-no">4</span>
+            <h3>Anonymisation &amp; lab check-in</h3>
+            <span class="weeks">Week 9</span>
+            <p class="goal">Run the k-anonymity transform, load only the anonymised result into the app, and show the tutor a working demo.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 4.1</span><h4>k-anonymity transform (Task B)</h4><span class="who who-moaaz">Moaaz</span><span class="size">L·3</span></div>
+              <ul>
+                <li>As briefed: ~300 synthetic rows, quasi-identifiers faculty, year, gender, age; generalise, suppress, print k before and after; <code>--k</code> argument.</li>
+                <li>Added: <code>--seed</code> on <code>make_sample.py</code> so we can generate fresh data live in the demo.</li>
+                <li>README notes the limit: k-anonymity does not stop a homogeneity attack. Mention l-diversity in the report; don't build it.</li>
+                <li>Can start any time, since it has no dependencies.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>analytics/*</code></dd><dt>Needs</dt><dd>Nothing</dd><dt>Done when</dt><dd><code>python analytics/k_anonymity.py --k 5</code> prints k = 1 before and k ≥ 5 after.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 4.2</span><h4>Load anonymised data into the app</h4><span class="who who-moaaz">Moaaz</span><span class="size">M·2</span></div>
+              <ul>
+                <li><code>scripts/load-stats.js</code> reads <code>stats_anonymised.csv</code>, re-checks k, and refuses to load a file that fails.</li>
+                <li><code>GET /api/stats</code> and a “Campus stats” page showing the generalised groups.</li>
+                <li>The raw CSV is git-ignored and never loaded.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>scripts/load-stats.js</code>, <code>server/routes/stats.js</code>, <code>src/</code> stats view, <code>.gitignore</code></dd><dt>Needs</dt><dd>WP 4.1, 1.3</dd><dt>Done when</dt><dd>Live: fresh sample → transform → load → the page updates.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="all">
+              <div class="wp-top"><span class="wp-id">WP 4.3</span><h4>Week 9 lab check-in</h4><span class="who who-all">Everyone</span><span class="size">S·1 each</span></div>
+              <ul>
+                <li>Run the end-to-end demo for the tutor, each person showing their own part.</li>
+                <li>Write the feedback in <code>docs/feedback.md</code> and turn each point into a task.</li>
+              </ul>
+            </div>
+
+            <div class="gate"><b>Gate 4</b><ul><li>k before and after printed live.</li><li>The app shows anonymised data only.</li><li>Check-in feedback logged and assigned.</li></ul></div>
+            <div class="viva"><b>Viva prep</b><ul><li>What does k = 5 guarantee, and which attack does it not stop?</li><li>Why generalise and suppress instead of just removing names?</li><li>Why are age and faculty quasi-identifiers even though neither names anyone?</li></ul></div>
+          </div>
+        </article>
+
+        <!-- ---------- PHASE 5 ---------- -->
+        <article class="phase" id="p5">
+          <div class="phase-head">
+            <span class="phase-no">5</span>
+            <h3>Contingency &amp; business continuity</h3>
+            <span class="weeks">Week 10 · 20% of the mark</span>
+            <p class="goal">A first-hour runbook for the two scenarios in the brief, built on tools that really exist in our app, and rehearsed against the clock.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 5.1</span><h4>Runbook</h4><span class="who who-moaaz">Moaaz</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Roles during an incident: incident lead, fixer, communications.</li>
+                <li>First-hour timeline: T+0–10 confirm and assign roles · T+10–25 contain · T+25–45 fix and verify · T+45–60 communicate and record.</li>
+                <li><b>Scenario A, misconfigured role:</b> detect with <code>attack.sh</code> or the audit log; contain with a Vercel instant rollback or a revert of <code>permissions.js</code>; revoke that role's sessions; review the audit log for what the role did while over-privileged.</li>
+                <li><b>Scenario B, leaked MFA secret:</b> revoke the user's sessions, reset their MFA, review the audit log since the suspected leak; if <code>DATA_KEY</code> itself may have leaked, rotate it.</li>
+                <li>Communications: who is told, a message template, and a check of the 72-hour breach notification duty under Egypt's Law 151/2020.</li>
+                <li>Recovery targets (RTO 1 hour; RPO from Neon point-in-time restore) and a post-incident review template.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>docs/runbook.md</code></dd><dt>Needs</dt><dd>WP 2.3, 2.4, 5.2</dd><dt>Done when</dt><dd>Every step names a real command, page or button in our app.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 5.2</span><h4>Runbook tooling</h4><span class="who who-mayan">Mayan</span><span class="size">L·3</span></div>
+              <ul>
+                <li>Admin “Reset MFA” for a user: clears the secret, forces re-enrolment, writes to the audit log.</li>
+                <li>“Revoke sessions” for one user or a whole role, by bumping <code>session_version</code>.</li>
+                <li><code>scripts/rotate-data-key.js</code>: re-encrypts every field from the old key to a new one (<code>v1</code> → <code>v2</code>). <code>PEPPER</code> is not rotated, because that would orphan every ownership tag; the runbook explains this trade-off.</li>
+                <li>Each new admin route is added to the attack suite.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>server/routes/admin.js</code>, <code>scripts/rotate-data-key.js</code></dd><dt>Needs</dt><dd>WP 2.4, 3.1, 3.2</dd><dt>Done when</dt><dd>All three tools work on the live site and appear in the audit log.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 5.3</span><h4>Backup, restore &amp; rollback drill</h4><span class="who who-mayan">Mayan</span><span class="size">M·2</span></div>
+              <ul>
+                <li>Neon: create a restore point, restore it into a branch, confirm the data is there.</li>
+                <li>Vercel: instant rollback to the previous deployment and back.</li>
+                <li>Exact steps with screenshots.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>docs/continuity.md</code></dd><dt>Needs</dt><dd>Phase 3 done</dd><dt>Done when</dt><dd>A restore and a rollback have actually been run and timed.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="all">
+              <div class="wp-top"><span class="wp-id">WP 5.4</span><h4>Timed tabletop drill</h4><span class="who who-all">Everyone</span><span class="size">S·1 each</span></div>
+              <ul>
+                <li>Scenario A: Moaaz leads, Mayan fixes, Habiba handles comms. Scenario B: swap roles.</li>
+                <li>Run on a preview deployment with a timer; record the times and anything that went wrong in the runbook.</li>
+              </ul>
+            </div>
+
+            <div class="gate"><b>Gate 5</b><ul><li>Both scenarios walked end to end in under 60 minutes each, with real tools.</li><li>Timings and lessons recorded in the runbook.</li></ul></div>
+            <div class="viva"><b>Viva prep</b><ul><li>What is the very first thing you do when a role is found misconfigured?</li><li>Why revoke sessions as well as resetting the MFA secret?</li><li>What is our RTO, and which tool lets us meet it?</li></ul></div>
+          </div>
+        </article>
+
+        <!-- ---------- PHASE 6 ---------- -->
+        <article class="phase" id="p6">
+          <div class="phase-head">
+            <span class="phase-no">6</span>
+            <h3>Report, demo &amp; submission</h3>
+            <span class="weeks">Weeks 11–12</span>
+            <p class="goal">Draft report and slides substantially complete in Week 11 for lab peer feedback; submit and present in Week 12.</p>
+          </div>
+          <div class="phase-body">
+
+            <div class="wp" data-owner="habiba">
+              <div class="wp-top"><span class="wp-id">WP 6.1</span><h4>Demo script &amp; backup video</h4><span class="who who-habiba">Habiba</span><span class="size">M·2</span></div>
+              <ul>
+                <li>A clean, seeded demo state and a minute-by-minute script (see the <a href="#demo">run-sheet</a>).</li>
+                <li>Record the full backup video in Week 11, as the proposal promises.</li>
+              </ul>
+              <dl><dt>Files</dt><dd><code>docs/demo-script.md</code></dd><dt>Done when</dt><dd>The video is saved in two places and the script fits in 10 minutes.</dd></dl>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 6.2</span><h4>Presentation slides</h4><span class="who who-mayan">Mayan</span><span class="size">M·2</span></div>
+              <ul><li>8–10 minutes, three speakers, live-demo cues built into the slides. Architecture diagram and the permission matrix as visuals.</li></ul>
+            </div>
+
+            <div class="wp" data-owner="moaaz">
+              <div class="wp-top"><span class="wp-id">WP 6.3</span><h4>Report assembly</h4><span class="who who-moaaz">Moaaz</span><span class="size">M·2</span></div>
+              <ul><li>Merge everyone's sections (see the <a href="#report">report split</a>), keep it to 1,500–2,000 words, build the technical appendix with code and screenshots, export to PDF.</li></ul>
+            </div>
+
+            <div class="wp" data-owner="mayan">
+              <div class="wp-top"><span class="wp-id">WP 6.4</span><h4>Build log &amp; contribution statement</h4><span class="who who-mayan">Mayan</span><span class="size">S·1</span></div>
+              <ul><li>Tidy <code>BUILD_LOG.md</code> (setup notes, key commands, who did what). Fill the contribution statement table from this plan's points plus what actually happened, and get it agreed and signed by all three.</li></ul>
+            </div>
+
+            <div class="wp" data-owner="all">
+              <div class="wp-top"><span class="wp-id">WP 6.5</span><h4>Mock viva</h4><span class="who who-all">Everyone</span><span class="size">S·1 each</span></div>
+              <ul><li>Each person is questioned for 10 minutes on a part they did not build, using the viva questions from every phase.</li></ul>
+            </div>
+
+            <div class="gate"><b>Gate 6</b><ul><li>Report PDF, contribution statement and code submitted on e-learning.</li><li>Everyone has passed a mock viva and run the demo alone.</li></ul></div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================= MATRIX ================= -->
+      <section id="matrix">
+        <h2>Permission matrix (proposed)</h2>
+        <p class="intro">Built from the role table in the proposal. Everyone who is logged in shares a base of read, react and report; each role adds one capability group on top. WP 1.2 turns this into code after the team confirms it.</p>
+        <div class="table-wrap">
+          <table class="matrix">
+            <thead><tr><th>Capability</th><th>Sipper</th><th>Spiller</th><th>Witness</th><th>Verifier</th><th>Moderator</th><th>Admin</th></tr></thead>
+            <tbody>
+              <tr><td>Read served cups</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+              <tr><td>React and report</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+              <tr><td>Create, edit, delete own cups</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+              <tr><td>Witnessed (trusted) reactions</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+              <tr><td>Verdict: steeped / weak</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td></tr>
+              <tr><td>See brewing queue, approve / hide, resolve reports</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td><td class="n">–</td></tr>
+              <tr><td>Promote Sipper → Witness</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td><td class="y">✓</td></tr>
+              <tr><td>Manage users and roles, audit log, settings, inspect raw data</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td></tr>
+              <tr><td>MFA required</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+              <tr class="never"><td>Unmask a poster</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td><td>✗</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= WORKLOAD ================= -->
+      <section id="workload">
+        <h2>Workload split by complexity</h2>
+        <p class="intro">Split by complexity points rather than by the fixed role titles in section 6 of the proposal. Each person carries about a third of the points, owns at least one of the brief's five technical requirements end to end, and has a contingency or documentation piece. We record this change from the proposal in the contribution statement.</p>
+
+        <div class="panel">
+          <div class="load">
+            <div class="load-row" data-owner="habiba">
+              <span class="name">Habiba</span>
+              <div class="load-bar" aria-label="Habiba 17 points">
+                <span class="seg-habiba" style="flex: 2" title="1.2 Permission matrix">1.2</span>
+                <span class="seg-habiba" style="flex: 2" title="1.3 Schema v2">1.3</span>
+                <span class="seg-habiba" style="flex: 3" title="2.1 Accounts">2.1</span>
+                <span class="seg-habiba" style="flex: 5" title="2.2 Role-gated flows">2.2</span>
+                <span class="seg-habiba" style="flex: 3" title="3.2 Wire encryption">3.2</span>
+                <span class="seg-habiba" style="flex: 2" title="6.1 Demo script">6.1</span>
+                <span style="flex: 1; background: transparent"></span>
+              </div>
+              <span class="pts">17</span>
+            </div>
+            <div class="load-row" data-owner="mayan">
+              <span class="name">Mayan</span>
+              <div class="load-bar" aria-label="Mayan 17 points">
+                <span class="seg-mayan" style="flex: 3" title="1.4 Crypto module">1.4</span>
+                <span class="seg-mayan" style="flex: 3" title="2.4 Admin & audit">2.4</span>
+                <span class="seg-mayan" style="flex: 3" title="3.1 TOTP MFA">3.1</span>
+                <span class="seg-mayan" style="flex: 3" title="5.2 Runbook tooling">5.2</span>
+                <span class="seg-mayan" style="flex: 2" title="5.3 Restore drill">5.3</span>
+                <span class="seg-mayan" style="flex: 2" title="6.2 Slides">6.2</span>
+                <span class="seg-mayan" style="flex: 1" title="6.4 Build log">6.4</span>
+                <span style="flex: 1; background: transparent"></span>
+              </div>
+              <span class="pts">17</span>
+            </div>
+            <div class="load-row" data-owner="moaaz">
+              <span class="name">Moaaz</span>
+              <div class="load-bar" aria-label="Moaaz 18 points">
+                <span class="seg-moaaz" style="flex: 3" title="1.1 Threat model">1.1</span>
+                <span class="seg-moaaz" style="flex: 2" title="2.3 Attack suite">2.3</span>
+                <span class="seg-moaaz" style="flex: 1" title="3.3 TLS">3.3</span>
+                <span class="seg-moaaz" style="flex: 2" title="3.4 Inspection">3.4</span>
+                <span class="seg-moaaz" style="flex: 3" title="4.1 k-anonymity">4.1</span>
+                <span class="seg-moaaz" style="flex: 2" title="4.2 Load stats">4.2</span>
+                <span class="seg-moaaz" style="flex: 3" title="5.1 Runbook">5.1</span>
+                <span class="seg-moaaz" style="flex: 2" title="6.3 Report">6.3</span>
+              </div>
+              <span class="pts">18</span>
+            </div>
+          </div>
+          <div class="legend"><span>Each block is one work package, width = complexity points.</span><span>Shared work (4.3, 5.4, 6.5) is equal for all three and not counted.</span></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Person</th><th>Hardest piece</th><th>Brief requirement owned</th><th>Live-demo moment</th><th class="num">Points</th><th class="num">Share</th></tr></thead>
+            <tbody>
+              <tr data-owner="habiba"><td><span class="who who-habiba">Habiba</span></td><td>Role-gated flows (XL)</td><td>1 Starter app · 2 RBAC</td><td>Blocked action as a lower role</td><td class="num">17</td><td class="num">33%</td></tr>
+              <tr data-owner="mayan"><td><span class="who who-mayan">Mayan</span></td><td>Crypto module, TOTP MFA</td><td>3 MFA · 4 Encryption at rest</td><td>MFA login, ciphertext explained</td><td class="num">17</td><td class="num">33%</td></tr>
+              <tr data-owner="moaaz"><td><span class="who who-moaaz">Moaaz</span></td><td>k-anonymity, threat model, runbook</td><td>4 TLS · 5 Anonymisation · contingency</td><td>Live k-anonymity re-run, runbook walk-through</td><td class="num">18</td><td class="num">34%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small">Habiba is on the critical path (1.3 → 2.1 → 2.2 → 3.2). Week 10 is kept free in her column as a buffer for slips there. Mayan and Moaaz can start immediately: WP 1.4, 1.1 and 4.1 depend on nothing.</p>
+      </section>
+
+      <!-- ================= DEMO ================= -->
+      <section id="demo">
+        <h2>Demo run-sheet</h2>
+        <p class="intro">Covers all four live-demo requirements from the brief. Presenters do not have to be the builders, so the speaking time is even.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Time</th><th>Presenter</th><th>What happens</th><th>Brief requirement</th></tr></thead>
+            <tbody>
+              <tr data-owner="habiba"><td class="mono">0:00–1:30</td><td><span class="who who-habiba">Habiba</span></td><td>The problem: public cups, secret authors, and why even Admin can't unmask.</td><td>Context</td></tr>
+              <tr data-owner="mayan"><td class="mono">1:30–3:00</td><td><span class="who who-mayan">Mayan</span></td><td>Log in as Moderator with a phone authenticator code.</td><td>Log in with MFA live</td></tr>
+              <tr data-owner="habiba"><td class="mono">3:00–5:00</td><td><span class="who who-habiba">Habiba</span></td><td>As Sipper, call the approve endpoint directly: 403. Run <code>attack.sh</code>: all green. Show there is no unmask route.</td><td>Blocked as a lower-privileged role</td></tr>
+              <tr data-owner="mayan"><td class="mono">5:00–6:30</td><td><span class="who who-mayan">Mayan</span></td><td>Spill Inspection: raw rows show <code>v1:…</code> ciphertext and author tags. Explain GCM and the pepper.</td><td>Raw database proves no plaintext</td></tr>
+              <tr data-owner="moaaz"><td class="mono">6:30–8:30</td><td><span class="who who-moaaz">Moaaz</span></td><td>Generate a fresh sample with a new seed, run the transform, k before and after, load it, refresh Campus stats.</td><td>Re-run anonymisation live</td></tr>
+              <tr data-owner="moaaz"><td class="mono">8:30–9:30</td><td><span class="who who-moaaz">Moaaz</span></td><td>Runbook, Scenario B: revoke sessions and reset MFA for a “leaked” user, then show it in the audit log.</td><td>Contingency</td></tr>
+              <tr data-owner="all"><td class="mono">9:30–10:00</td><td><span class="who who-all">Everyone</span></td><td>Wrap-up and questions.</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= REPORT ================= -->
+      <section id="report">
+        <h2>Report split</h2>
+        <p class="intro">1,500–2,000 words excluding appendices, code and references. Moaaz assembles (WP 6.3). Each person writes about their own work, so the report matches what they will be asked in the discussion.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Section</th><th class="num">Words</th><th>Writer</th><th>Source material</th></tr></thead>
+            <tbody>
+              <tr data-owner="habiba"><td>1 · Introduction &amp; system description</td><td class="num">~150</td><td><span class="who who-habiba">Habiba</span></td><td>Proposal §1 and §3</td></tr>
+              <tr data-owner="moaaz"><td>2 · Threat &amp; risk context</td><td class="num">~200</td><td><span class="who who-moaaz">Moaaz</span></td><td>WP 1.1</td></tr>
+              <tr data-owner="habiba"><td>3a · Tools: RBAC, accounts, encrypted data flow</td><td class="num">~220</td><td><span class="who who-habiba">Habiba</span></td><td>WP 1.2, 2.1, 2.2, 3.2</td></tr>
+              <tr data-owner="mayan"><td>3b · Tools: AES-GCM, HMAC tags, TOTP MFA</td><td class="num">~220</td><td><span class="who who-mayan">Mayan</span></td><td>WP 1.4, 3.1</td></tr>
+              <tr data-owner="moaaz"><td>3c · Tools: TLS, k-anonymity, inspection</td><td class="num">~220</td><td><span class="who who-moaaz">Moaaz</span></td><td>WP 3.3, 3.4, 4.1, 4.2</td></tr>
+              <tr data-owner="moaaz"><td>4 · Contingency &amp; business continuity plan</td><td class="num">~300</td><td><span class="who who-moaaz">Moaaz</span></td><td>WP 5.1, drill timings</td></tr>
+              <tr data-owner="mayan"><td>4 · (continued) tooling, restore and rollback</td><td class="num">~150</td><td><span class="who who-mayan">Mayan</span></td><td>WP 5.2, 5.3</td></tr>
+              <tr data-owner="all"><td>5 · Reflection on learning</td><td class="num">~250</td><td><span class="who who-all">Everyone</span></td><td>About 70 words each plus a group paragraph by Habiba</td></tr>
+              <tr data-owner="mayan"><td>References</td><td class="num">–</td><td><span class="who who-mayan">Mayan</span></td><td>Law 151/2020, NIST TOTP / RFC 6238, Node crypto docs, k-anonymity (Sweeney 2002)</td></tr>
+              <tr data-owner="all"><td>Technical appendix</td><td class="num">–</td><td><span class="who who-all">Everyone</span></td><td>Screenshots and code for your own WPs</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= RISKS ================= -->
+      <section id="risks">
+        <h2>Delivery risks</h2>
+        <p class="intro">The first five come from our proposal. The rest are new, found while scanning the repo.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Risk</th><th>What we do about it</th><th>Watcher</th></tr></thead>
+            <tbody>
+              <tr><td>Live demo breaks on the day</td><td>Seeded demo state, backup video in Week 11, rehearse on the live URL and locally.</td><td><span class="who who-habiba">Habiba</span></td></tr>
+              <tr><td>RBAC only enforced in the UI</td><td><code>requirePerm()</code> on every route; attack suite written before the routes.</td><td><span class="who who-moaaz">Moaaz</span></td></tr>
+              <tr><td>MFA or TLS takes longer than planned</td><td>Prototype TOTP in Week 7; TLS is mostly evidence because Vercel already serves HTTPS.</td><td><span class="who who-mayan">Mayan</span></td></tr>
+              <tr><td>k-anonymity still allows re-identification</td><td>Test on small groups, raise k until no record is unique; loader refuses files that fail.</td><td><span class="who who-moaaz">Moaaz</span></td></tr>
+              <tr><td>Someone misses the individual discussion</td><td>Book slots as soon as they open; this is the top priority because it zeroes the coursework.</td><td><span class="who who-all">Everyone</span></td></tr>
+              <tr><td>Habiba becomes a bottleneck</td><td>24-hour review rule, tests and admin UI built in parallel, Week 10 kept as her buffer.</td><td><span class="who who-habiba">Habiba</span></td></tr>
+              <tr><td>Losing <code>DATA_KEY</code> or <code>PEPPER</code> makes data unreadable</td><td>Keys kept in Vercel env vars and in one shared password manager entry; never in chat or git.</td><td><span class="who who-mayan">Mayan</span></td></tr>
+              <tr><td>PGlite locally behaves differently from Neon</td><td>Habiba's PRs get a Vercel preview; for Mayan's and Moaaz's PRs, check the production deploy right after merging and roll back if it breaks.</td><td><span class="who who-all">Everyone</span></td></tr>
+              <tr><td>Phase 1 is already behind (no code on Task A or B yet)</td><td>Start WP 1.4, 1.1 and 4.1 this week; they block nothing else and nothing blocks them.</td><td><span class="who who-all">Everyone</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= DECISIONS ================= -->
+      <section id="decisions">
+        <h2>Open decisions for the team</h2>
+        <p class="intro">Agree these at the next meeting, before WP 1.2 and 1.3 are finalised. The recommendation is listed first.</p>
+        <div class="grid-2">
+          <div class="panel"><h3>How does someone become a Spiller?</h3><p class="small"><b>Recommended:</b> everyone signs up as Sipper and an Admin grants Spiller, which matches the proposal's role table. Alternative: every new account is a Spiller, which is simpler but makes the Sipper role nearly unused.</p></div>
+          <div class="panel"><h3>Where does the stats dataset come from?</h3><p class="small"><b>Recommended:</b> synthetic data only. Collecting faculty, year, gender and age at sign-up just to anonymise them later contradicts data minimisation, and that makes a good viva point.</p></div>
+          <div class="panel"><h3>Photo uploads?</h3><p class="small"><b>Recommended:</b> no uploads unless the stretch slot opens. Not collecting photos removes the metadata risk entirely, and the threat model says so.</p></div>
+          <div class="panel"><h3>Student email verification?</h3><p class="small"><b>Recommended:</b> store the student ID and email encrypted, but don't send verification emails. Sending email is out of scope.</p></div>
+        </div>
+      </section>
+
+      <footer class="end">
+        Generated from the proposal (<i>Spill The Tea</i>, Option 1), the module project brief and the repository at commit <code>644f60f</code>. Keep this page in <code>docs/</code> and update it when a decision changes.
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('plan');
+    var buttons = document.querySelectorAll('[data-who-btn]');
+    function select(who) {
+      root.setAttribute('data-who', who);
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-who-btn') === who)); });
+      try { localStorage.setItem('stt-plan-who', who); } catch (e) {}
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { select(b.getAttribute('data-who-btn')); });
+    });
+    try {
+      var saved = localStorage.getItem('stt-plan-who');
+      if (saved && document.querySelector('[data-who-btn="' + saved + '"]')) select(saved);
+    } catch (e) {}
+  })();
+</script>
