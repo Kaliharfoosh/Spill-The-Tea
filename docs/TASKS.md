@@ -3,16 +3,14 @@
 Each task lives in its own files, so the three of us can work in parallel without merge conflicts.
 
 **How to work**
-1. `git checkout main && git pull`, then create your branch named after you: `git checkout -b mayan` / `moaaz` / `habiba`.
-2. Only edit the files listed in your task (plus one line at the bottom of `BUILD_LOG.md`).
-3. Push your branch and open a **Pull Request** into `main`. Habiba reviews and merges.
-   - Vercel is on the free Hobby plan, so it only deploys commits authored by Habiba. Previews of the
-     `mayan` and `moaaz` branches show as **Blocked**. That is expected, not an error in your code.
-     Test your work locally with `npm run dev` instead.
-   - Habiba merges with **"Create a merge commit"** only. "Squash and merge" and "Rebase and merge"
-     keep your name as the commit author, so Vercel would block the production deploy.
-   - Never push to `main` yourself and never click Merge yourself, for the same reason.
-4. Using Claude in WebStorm? Tell it: *"Do Task A from docs/TASKS.md"*. It already reads
+1. Get the latest code into your branch: `git checkout mayan` (or `moaaz` / `habiba`), then
+   `git pull origin main`.
+2. Make your changes and test them with `npm run dev`.
+3. Commit and push your branch. Vercel builds a preview of it.
+4. Open a **Pull Request** into `main` and merge it yourself whenever you're ready. Any merge button
+   works. Every merge to `main` deploys to the live site.
+5. Add a line to `BUILD_LOG.md` for what you built.
+6. Using Claude in WebStorm? Tell it: *"Do Task A from docs/TASKS.md"*. It already reads
    `CLAUDE.md` for the project rules.
 
 ---

@@ -218,8 +218,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
 
 .rules { counter-reset: rule; list-style: none; padding: 0; display: grid; gap: 8px; font-size: 14.5px; }
-.rules li { counter-increment: rule; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px; margin: 0; }
-.rules li::before { content: counter(rule, decimal-leading-zero); font: 600 12px var(--font-mono); color: var(--accent); padding-top: 3px; }
+/* Block + absolutely placed number (not grid): a grid would turn every <code> in the rule into its own cell. */
+.rules li { counter-increment: rule; position: relative; padding-left: 38px; margin: 0; }
+.rules li::before { content: counter(rule, decimal-leading-zero); position: absolute; left: 0; top: 3px; font: 600 12px var(--font-mono); color: var(--accent); }
 
 .callout { background: var(--warn-soft); border-radius: 10px; padding: 12px 16px; font-size: 14.5px; }
 .callout b { color: var(--warn); }
@@ -371,10 +372,10 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
             <ol class="rules">
               <li>Pull <code>main</code>, then work on your own branch: <code>habiba</code>, <code>mayan</code>, <code>moaaz</code>.</li>
               <li>Only edit the files listed in your work package. Shared files (<code>server/schema.js</code>, <code>server/app.js</code>) need a heads-up in the group chat first.</li>
-              <li>Open a PR into <code>main</code>. Nobody merges their own PR: Habiba reviews Mayan and Moaaz; Mayan or Moaaz reviews Habiba.</li>
+              <li>Open a PR into <code>main</code>. Anyone may merge their own PR, whenever they like, once one teammate has approved it. Never push straight to <code>main</code>.</li>
               <li>Review within 24 hours. Habiba's work is the critical path, so slow reviews delay everyone.</li>
               <li>Every PR description has three lines: what, security reason, how to test.</li>
-              <li><code>npm test</code> and <code>scripts/attack.sh</code> pass locally before merging. Vercel's free plan blocks previews of Mayan's and Moaaz's commits, so Habiba merges with “Create a merge commit” only (squash and rebase keep the teammate as author, which Vercel blocks) and checks the production deploy.</li>
+              <li><code>npm test</code> and <code>scripts/attack.sh</code> pass, and the PR's Vercel preview shows Ready and works, before merging. Whoever merges checks that the production deploy shows Ready afterwards.</li>
               <li>One line in <code>BUILD_LOG.md</code> per merged work package. Write “(with Claude)” when AI helped.</li>
             </ol>
           </div>
@@ -938,7 +939,7 @@ footer.end { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13
               <tr><td>Someone misses the individual discussion</td><td>Book slots as soon as they open; this is the top priority because it zeroes the coursework.</td><td><span class="who who-all">Everyone</span></td></tr>
               <tr><td>Habiba becomes a bottleneck</td><td>24-hour review rule, tests and admin UI built in parallel, Week 10 kept as her buffer.</td><td><span class="who who-habiba">Habiba</span></td></tr>
               <tr><td>Losing <code>DATA_KEY</code> or <code>PEPPER</code> makes data unreadable</td><td>Keys kept in Vercel env vars and in one shared password manager entry; never in chat or git.</td><td><span class="who who-mayan">Mayan</span></td></tr>
-              <tr><td>PGlite locally behaves differently from Neon</td><td>Habiba's PRs get a Vercel preview; for Mayan's and Moaaz's PRs, check the production deploy right after merging and roll back if it breaks.</td><td><span class="who who-all">Everyone</span></td></tr>
+              <tr><td>PGlite locally behaves differently from Neon</td><td>Check every PR on its Vercel preview before merging; if production breaks after a merge, use Vercel's Instant Rollback.</td><td><span class="who who-all">Everyone</span></td></tr>
               <tr><td>Phase 1 is already behind (no code on Task A or B yet)</td><td>Start WP 1.4, 1.1 and 4.1 this week; they block nothing else and nothing blocks them.</td><td><span class="who who-all">Everyone</span></td></tr>
             </tbody>
           </table>
